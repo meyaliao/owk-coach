@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>老玩客 週三班 教練卡</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div id="loading"><div class="spinner"></div><div>載入學員資料中…</div></div>
+<div id="err" style="display:none">
+  <div style="font-size:32px">⚠️</div>
+  <div id="err-msg">無法取得資料</div>
+</div>
+
+<div id="app" style="display:none">
+  <header class="header">
+    <div class="header-logo">🏃</div>
+    <div class="header-text">
+      <h1>老玩客 教練卡</h1>
+      <p>課程學員健康資料</p>
+    </div>
+    <div class="class-pill" id="class-label">週三班</div>
+  </header>
+  <nav class="tab-bar" id="tab-bar" role="tablist"></nav>
+  <main id="cards-container">
+    <div class="updated-bar" id="updated-bar"></div>
+  </main>
+</div>
+
+<script src="../coach-card.js"></script>
+<script>
+const API_URL    = 'https://script.google.com/macros/s/AKfycbyTaoqQO5X8F2deMX2TGdzqmGvC3cNXTkDmjpIeFTEXzgD0Kx0A429ZehEANIymkjQi/exec';
+const SHEET_NAME = '週三';
+const CLASS_TITLE = '週三班';
+
+// 修正：隱藏元素用 display 而非 hidden 屬性
+document.getElementById('err').style.display = 'none';
+document.getElementById('app').style.display = 'none';
+
+// 覆寫 buildUI 以使用 style.display
+const _origBuildUI = buildUI;
+function showApp(students, updatedStr, offline, classTitle) {
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('loading').style.display = 'none';
+  _origBuildUI(students, updatedStr, offline, classTitle);
+  // 修正 app.hidden 呼叫
+  document.getElementById('app').hidden = false;
+}
+
+loadData(API_URL, SHEET_NAME, CLASS_TITLE);
+</script>
+</body>
+</html>
